@@ -1,0 +1,661 @@
+# PROMPT — REAUDITORIA E PLANO DE MELHORIA DO DISCORD FUTURE STATION COM AUTOMAÇÕES GITHUB + N8N
+
+## 1. Contexto
+
+Você está atuando no ambiente da Future Station.
+
+A Future Station já possui um servidor Discord ativo, com uma estrutura existente que deve ser preservada, reaproveitada e melhorada, e não simplesmente substituída por uma estrutura nova.
+
+A estrutura atual observada no Discord é aproximadamente esta:
+
+```text
+Servidor: Future Station
+
+Área superior:
+- Eventos
+- Impulsos de servidor
+
+Canais de Texto atuais:
+- #geral
+- #prompts
+- #deixe-uma-música-aqui
+- #isights-vídeos / #insights-vídeos
+- #n8n-videos-tutoriais
+- #para-sites
+- #banco-de-dados
+- #links
+- #chat-clientes
+
+Canais de Voz atuais:
+- Privado
+- Reunião 1
+- Reunião 2
+- Reunião Clientes
+- Não perturbe!
+````
+
+Foi proposto anteriormente um plano de organização do servidor com categorias como:
+
+```text
+📌 INFORMAÇÕES
+💻 DESENVOLVIMENTO
+🔗 GITHUB
+🤖 AUTOMAÇÕES
+🧠 IA / MCP
+```
+
+Essa estrutura proposta faz sentido e deve ser considerada, mas precisa ser adaptada ao que já existe hoje no servidor.
+
+O objetivo não é apagar, ignorar ou recriar tudo do zero.
+
+O objetivo é criar um plano mais inteligente, respeitando a estrutura atual do Discord da Future Station, organizando melhor os canais existentes e adicionando os canais novos necessários para automações com GitHub, n8n e Discord.
+
+Também existe uma intenção futura de automatizar eventos de GitHub para o Discord, principalmente commits, pull requests, releases, GitHub Actions, deploys e erros.
+
+O usuário já possui o MCP do n8n instalado nos ambientes dele.
+
+Provavelmente ainda será necessário instalar/configurar o MCP do Discord.
+
+Se for necessário usar MCP de GitHub/Webhooks, analise e proponha a melhor abordagem, mas não assuma nada sem validar.
+
+## 2. Persona da IA
+
+Assuma o papel de um arquiteto sênior de automações, especialista em:
+
+* Discord para comunidades e times de desenvolvimento;
+* organização de servidores Discord corporativos;
+* GitHub, repositórios, commits, pull requests, releases e GitHub Actions;
+* webhooks;
+* n8n;
+* MCPs;
+* automações entre GitHub, n8n e Discord;
+* segurança de tokens, webhooks e permissões;
+* arquitetura incremental com baixa intervenção manual.
+
+Você deve agir como consultor técnico, organizador de comunidade e arquiteto de automações.
+
+## 3. Objetivo principal
+
+Criar uma reauditoria e um novo plano melhorado para o servidor Discord da Future Station, considerando obrigatoriamente a estrutura atual já existente e a estrutura proposta anteriormente.
+
+O plano deve explicar como reorganizar o servidor sem remover o que já existe, como criar os canais novos necessários e como preparar a automação GitHub → n8n → Discord.
+
+O plano também deve esclarecer como os commits aparecerão no Discord quando vierem de diferentes contas, autores, repositórios ou organizações do GitHub.
+
+## 4. Escopo da tarefa
+
+Você deve analisar e propor:
+
+1. Como adaptar a estrutura atual do Discord à estrutura ideal proposta.
+2. Quais canais atuais devem permanecer onde estão.
+3. Quais canais atuais podem ser agrupados em novas categorias.
+4. Quais canais novos precisam ser criados.
+5. Quais canais não devem ser alterados.
+6. Como organizar os canais de texto.
+7. Como organizar os canais de voz.
+8. Como criar uma área específica para GitHub.
+9. Como criar uma área específica para n8n/automações.
+10. Como criar uma área para IA, MCP, prompts e estudos.
+11. Como criar canais para commits, pull requests, releases, GitHub Actions, deploys e erros.
+12. Como a automação deve funcionar usando n8n como intermediário.
+13. Como usar o MCP do Discord para auxiliar na criação/organização dos canais.
+14. Como usar o MCP do n8n já instalado para montar ou ajustar workflows.
+15. Se vale a pena usar um MCP específico de GitHub/Webhooks ou se a configuração pode ser feita manualmente pelo GitHub.
+16. Como fazer tudo em fases seguras, começando por teste.
+17. Quais permissões serão necessárias no Discord, GitHub e n8n.
+18. Quais riscos existem.
+19. Como validar tudo antes de ativar oficialmente.
+
+## 5. Estrutura atual que deve ser preservada
+
+A estrutura atual não deve ser apagada nem ignorada.
+
+Considere que os canais atuais possuem valor e provavelmente já são usados pelo time.
+
+Você deve propor uma reorganização respeitosa, por exemplo:
+
+```text
+📌 INFORMAÇÕES
+├── #geral
+├── #avisos
+├── #links
+└── #regras
+
+🧠 CONTEÚDOS / IDEIAS
+├── #prompts
+├── #deixe-uma-música-aqui
+├── #insights-vídeos
+├── #n8n-videos-tutoriais
+├── #para-sites
+└── #banco-de-dados
+
+💼 CLIENTES / PROJETOS
+├── #chat-clientes
+└── outros canais futuros de clientes/projetos
+
+🔗 GITHUB
+├── #github-commits
+├── #github-pull-requests
+├── #github-releases
+├── #github-actions
+└── #github-alertas
+
+🤖 AUTOMAÇÕES
+├── #n8n-logs
+├── #deploys
+├── #erros-producao
+└── #monitoramento
+
+🔊 VOZ / REUNIÕES
+├── Privado
+├── Reunião 1
+├── Reunião 2
+├── Reunião Clientes
+└── Não perturbe!
+```
+
+Essa estrutura é apenas uma base.
+
+Você deve avaliar se existe uma organização melhor e justificar.
+
+## 6. Ponto importante sobre commits e contas do GitHub
+
+Explique claramente como os commits aparecerão no Discord.
+
+O usuário quer entender se, quando houver commits, eles aparecerão separados por conta, autor, repositório, organização ou evento.
+
+Você deve explicar no plano que eventos de commit vindos do GitHub normalmente podem trazer informações como:
+
+* repositório;
+* organização ou owner;
+* branch;
+* autor do commit;
+* usuário que realizou o push;
+* mensagem do commit;
+* hash do commit;
+* link do commit;
+* lista de arquivos alterados, quando disponível;
+* quantidade de commits no push;
+* timestamp.
+
+Explique as possibilidades de organização:
+
+### Opção A — Um único canal geral de commits
+
+Todos os commits aparecem em `#github-commits`, mas cada mensagem informa:
+
+```text
+Repositório:
+Branch:
+Autor:
+Conta/owner:
+Mensagem:
+Commit:
+Link:
+```
+
+### Opção B — Separar por repositório
+
+Criar canais específicos, por exemplo:
+
+```text
+#github-app-flutter
+#github-site-future-station
+#github-backend
+```
+
+### Opção C — Separar por tipo de evento
+
+Manter canais assim:
+
+```text
+#github-commits
+#github-pull-requests
+#github-releases
+#github-actions
+```
+
+### Opção D — Separar por conta/organização
+
+Caso existam commits vindos de GitHub pessoal, GitHub da empresa ou GitHub de colegas, o n8n pode identificar o `repository.owner`, `sender.login` ou `pusher.name` e formatar a mensagem deixando claro de qual conta veio.
+
+Exemplo:
+
+```text
+🚀 Novo commit recebido
+
+Origem: GitHub Future Station
+Repositório: futurestation/app-flutter
+Branch: main
+Autor do commit: Igão
+Push realizado por: igao-dev
+Mensagem: Ajusta componente de login
+Commit: abc1234
+Link: https://github.com/...
+```
+
+### Recomendação esperada
+
+Você deve recomendar a melhor opção para a Future Station neste momento.
+
+A princípio, priorize uma estrutura simples e escalável:
+
+* separar por tipo de evento;
+* dentro da mensagem, informar repositório, conta/owner, branch e autor;
+* futuramente, se o volume crescer, separar por projeto ou repositório.
+
+## 7. Arquitetura desejada
+
+Considere a arquitetura base:
+
+```text
+GitHub
+  ↓
+Webhook do GitHub
+  ↓
+Webhook Trigger no n8n
+  ↓
+Validação de segurança / secret
+  ↓
+Identificação do evento
+  ↓
+Filtro por repositório, branch, autor ou tipo de evento
+  ↓
+Formatação da mensagem
+  ↓
+Discord Webhook
+  ↓
+Canal correto no Discord
+```
+
+O Discord MCP pode ser usado para:
+
+```text
+- listar estrutura atual do servidor;
+- listar categorias;
+- listar canais;
+- mapear permissões;
+- criar categorias;
+- criar canais;
+- criar webhooks;
+- enviar mensagens de teste;
+- ajustar descrições;
+- padronizar nomes;
+- organizar canais existentes;
+- validar se os canais foram criados corretamente.
+```
+
+O n8n MCP já existente pode ser usado para:
+
+```text
+- auditar workflows existentes, se houver;
+- criar workflow GitHub → Discord;
+- configurar Webhook Trigger;
+- criar roteamento por tipo de evento;
+- criar nós de tratamento;
+- criar formatação de mensagens;
+- criar HTTP Request para Discord Webhook;
+- testar payloads;
+- validar execução;
+- ativar o workflow somente após aprovação.
+```
+
+O GitHub pode ser configurado por:
+
+```text
+- MCP específico de GitHub/Webhooks, se disponível e seguro;
+- GitHub CLI;
+- interface web do GitHub;
+- API do GitHub;
+- configuração manual inicial para reduzir risco.
+```
+
+Você deve comparar essas opções e recomendar o caminho mais seguro.
+
+## 8. Processo obrigatório de trabalho
+
+Siga o padrão:
+
+```text
+AUDITORIA → PLANO → APROVAÇÃO → IMPLEMENTAÇÃO
+```
+
+Não implemente nada logo de início.
+
+Primeiro, gere uma reauditoria e um plano.
+
+### Fase 1 — Auditoria
+
+Audite:
+
+* estrutura atual do Discord;
+* canais existentes;
+* categorias existentes;
+* canais de texto;
+* canais de voz;
+* permissões principais;
+* possíveis canais duplicados;
+* canais mal nomeados;
+* canais que devem ser preservados;
+* canais que podem ser reorganizados;
+* lacunas para automações;
+* lacunas para GitHub;
+* lacunas para n8n;
+* lacunas para clientes/projetos.
+
+### Fase 2 — Plano de reorganização
+
+Proponha:
+
+* estrutura final recomendada;
+* canais que serão mantidos;
+* canais que serão movidos;
+* canais que serão criados;
+* canais que serão renomeados, se necessário;
+* canais que não devem ser mexidos;
+* justificativa para cada categoria;
+* justificativa para cada canal novo;
+* riscos de reorganização.
+
+### Fase 3 — Plano de automação
+
+Proponha:
+
+* fluxo GitHub → n8n → Discord;
+* eventos que serão tratados;
+* canais de destino;
+* formato das mensagens;
+* dados exibidos nas mensagens;
+* tratamento para commits de contas diferentes;
+* tratamento para repositórios diferentes;
+* tratamento para branches diferentes;
+* tratamento para falhas de GitHub Actions;
+* tratamento para deploys;
+* logs e monitoramento.
+
+### Fase 4 — Teste controlado
+
+Antes da implantação oficial:
+
+```text
+1. Criar ou usar um canal #github-teste.
+2. Criar webhook de teste do Discord.
+3. Criar workflow de teste no n8n.
+4. Configurar apenas 1 repositório de teste no GitHub.
+5. Fazer um commit de teste.
+6. Validar a mensagem no Discord.
+7. Ajustar formatação.
+8. Só depois replicar para os canais oficiais.
+```
+
+### Fase 5 — Implementação oficial
+
+Somente após aprovação explícita do usuário:
+
+```text
+1. Criar categorias oficiais.
+2. Mover canais existentes para categorias corretas.
+3. Criar canais novos.
+4. Criar webhooks do Discord.
+5. Criar ou ajustar workflow n8n.
+6. Configurar webhooks GitHub.
+7. Testar eventos reais.
+8. Documentar tudo.
+```
+
+## 9. Canais recomendados inicialmente
+
+Proponha uma estrutura inicial enxuta, sem exagerar na quantidade de canais.
+
+Considere esta sugestão como ponto de partida:
+
+```text
+📌 INFORMAÇÕES
+├── #geral
+├── #links
+└── #avisos
+
+🧠 CONTEÚDOS E IDEIAS
+├── #prompts
+├── #deixe-uma-música-aqui
+├── #insights-vídeos
+├── #n8n-videos-tutoriais
+├── #para-sites
+└── #banco-de-dados
+
+💼 CLIENTES E PROJETOS
+├── #chat-clientes
+
+🔗 GITHUB
+├── #github-teste
+├── #github-commits
+├── #github-pull-requests
+├── #github-releases
+└── #github-actions
+
+🤖 AUTOMAÇÕES
+├── #n8n-logs
+├── #deploys
+├── #erros-producao
+└── #monitoramento
+
+🔊 VOZ
+├── Privado
+├── Reunião 1
+├── Reunião 2
+├── Reunião Clientes
+└── Não perturbe!
+```
+
+Avalie se `#n8n-videos-tutoriais` deve ficar em “Conteúdos e Ideias” ou em “Automações”.
+
+Avalie se `#banco-de-dados` deve ficar em “Conteúdos e Ideias”, “Desenvolvimento” ou “Automações”.
+
+Avalie se vale a pena criar uma categoria separada chamada `💻 DESENVOLVIMENTO` com:
+
+```text
+#dev-geral
+#frontend
+#backend
+#flutter
+#bugs-e-ajustes
+```
+
+Mas não crie canais demais sem justificar.
+
+## 10. Formato das mensagens automáticas
+
+Proponha modelos de mensagens para o Discord.
+
+### Commit
+
+```text
+🚀 Novo commit
+
+Origem: [GitHub pessoal / GitHub Future Station / Organização]
+Repositório: [owner/repo]
+Branch: [branch]
+Autor: [autor do commit]
+Push por: [sender/pusher]
+Mensagem: [mensagem do commit]
+Arquivos alterados: [quantidade, se disponível]
+Commit: [hash curto]
+Link: [URL]
+```
+
+### Pull Request
+
+```text
+🔀 Pull Request atualizado
+
+Repositório: [owner/repo]
+Título: [título]
+Autor: [autor]
+Branch: [origem → destino]
+Status: [aberto / atualizado / mergeado / fechado]
+Link: [URL]
+```
+
+### Release
+
+```text
+🏷️ Nova release
+
+Repositório: [owner/repo]
+Versão: [tag]
+Publicado por: [autor]
+Resumo: [descrição curta]
+Link: [URL]
+```
+
+### GitHub Actions
+
+```text
+⚙️ GitHub Actions
+
+Repositório: [owner/repo]
+Workflow: [nome]
+Branch: [branch]
+Status: [sucesso / falha / em andamento]
+Autor: [sender]
+Link: [URL]
+```
+
+### Falha crítica
+
+```text
+🚨 Falha detectada
+
+Origem: GitHub Actions / Deploy / n8n
+Repositório/Workflow: [nome]
+Status: [falhou]
+Ambiente: [produção / homologação / dev]
+Responsável: [quando disponível]
+Link: [URL]
+```
+
+## 11. Segurança e permissões
+
+Inclua no plano:
+
+### Discord
+
+Verificar necessidade de permissões:
+
+```text
+- View Channels
+- Send Messages
+- Manage Webhooks
+- Manage Channels
+- Read Message History
+- Manage Roles, somente se for mexer em permissões
+```
+
+Evitar dar Administrator se não for necessário.
+
+### GitHub
+
+Verificar necessidade de permissões:
+
+```text
+- repo, se forem repositórios privados;
+- admin:repo_hook para criar webhooks em repositórios;
+- read:org, se houver organização;
+- admin:org_hook, somente se for usar webhook no nível da organização.
+```
+
+Preferir token dedicado com menor privilégio possível.
+
+### n8n
+
+Validar:
+
+```text
+- URL pública do webhook;
+- credenciais seguras;
+- variáveis de ambiente;
+- secret do webhook do GitHub;
+- workflow desativado até os testes;
+- logs de execução;
+- tratamento de erro;
+- retry/fallback se necessário.
+```
+
+## 12. Restrições obrigatórias
+
+Siga estas regras:
+
+* Não apagar canais existentes sem autorização explícita.
+* Não renomear canais existentes sem explicar impacto.
+* Não mover canais existentes sem aprovação.
+* Não criar muitos canais desnecessários.
+* Não instalar MCP sem explicar riscos e permissões.
+* Não expor tokens, webhook URLs ou secrets na resposta.
+* Não ativar workflow em produção sem teste.
+* Não configurar todos os repositórios de uma vez.
+* Começar com canal e repositório de teste.
+* Preservar a estrutura atual do servidor.
+* Adaptar a estrutura proposta à realidade atual.
+* Documentar tudo que for sugerido.
+* Separar claramente o que é auditoria, recomendação e implementação.
+
+## 13. Entrega esperada agora
+
+Neste momento, entregue apenas uma reauditoria e um plano melhorado.
+
+Não faça implementação ainda.
+
+A resposta deve conter:
+
+1. Diagnóstico da estrutura atual.
+2. Pontos positivos da estrutura atual.
+3. Problemas ou lacunas percebidas.
+4. Estrutura final recomendada.
+5. Mapeamento de canais atuais para novas categorias.
+6. Canais novos necessários.
+7. O que não deve ser alterado.
+8. Plano de automação GitHub → n8n → Discord.
+9. Explicação clara sobre como os commits aparecerão por conta, autor, repositório e branch.
+10. Recomendação sobre separar commits por canal ou por mensagem formatada.
+11. MCPs necessários.
+12. O que já está disponível, considerando que o MCP do n8n já existe.
+13. O que falta instalar/configurar, especialmente MCP do Discord.
+14. Permissões necessárias.
+15. Riscos.
+16. Plano de teste.
+17. Plano de implementação em fases.
+18. Checklist final para execução.
+
+## 14. Formato de resposta
+
+Entregue a resposta em Markdown, com títulos e subtítulos claros.
+
+Use tabelas quando fizer sentido, principalmente para:
+
+* mapear canais atuais para novas categorias;
+* listar canais novos;
+* listar permissões;
+* comparar opções de organização dos commits;
+* listar fases de implementação.
+
+A resposta deve ser prática, objetiva e pronta para virar um plano de execução.
+
+Não seja genérico.
+
+Não ignore a estrutura atual mostrada nos prints.
+
+Não trate o Discord como se estivesse vazio.
+
+## 15. Resultado esperado
+
+Ao final da resposta, eu preciso ter um plano claro para:
+
+* preservar o que já existe no Discord da Future Station;
+* reorganizar melhor os canais atuais;
+* adicionar canais de GitHub e automações;
+* entender como os commits vão aparecer;
+* decidir se separo por tipo de evento, repositório ou conta;
+* saber qual MCP instalar;
+* usar o MCP do n8n que já está instalado;
+* começar por um teste seguro;
+* depois partir para a implementação oficial.

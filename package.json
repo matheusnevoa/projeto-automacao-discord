@@ -1,0 +1,9 @@
+{
+  "name": "future-station-discord-novo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local unit-test mirrors for the n8n WF-GH-Discord Code nodes. See tests/README.md.",
+  "scripts": {
+    "test": "node --test tests/code-format-action.test.mjs tests/code-format-pr.test.mjs tests/code-format-release.test.mjs"
+  }
+}

@@ -1,0 +1,28 @@
+# Local tool/IDE state — não comitar
+.claude/settings.local.json
+.codex/
+.agents/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Logs e tmp
+*.log
+*.tmp
+.tmp/
+
+# Segredos (defensivo — nada do tipo é commitado hoje, mas barra ataques futuros)
+.env
+.env.*
+!.env.example
+*.pem
+*.key

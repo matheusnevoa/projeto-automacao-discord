@@ -1,0 +1,568 @@
+# Plano de Automação Discord + GitHub + n8n para Future Station
+
+## 1. Objetivo
+
+Criar uma estrutura automatizada para o servidor Discord da Future Station, permitindo que eventos do GitHub sejam registrados automaticamente em canais específicos do Discord, com pouca intervenção manual.
+
+A ideia é usar:
+
+- MCP do Discord para organizar e manipular o servidor Discord.
+- MCP de GitHub/Webhooks para criar ou gerenciar webhooks nos repositórios.
+- n8n já instalado para receber, tratar e distribuir os eventos.
+- Discord Webhooks para publicar mensagens formatadas nos canais corretos.
+
+---
+
+## 2. Arquitetura Geral
+
+```text
+GitHub
+  ↓
+Webhook do GitHub
+  ↓
+Webhook Trigger no n8n
+  ↓
+Tratamento / Filtro / Formatação
+  ↓
+Discord Webhook
+  ↓
+Canais do Discord da Future Station
+````
+
+---
+
+## 3. MCPs Recomendados
+
+### 3.1 MCP Discord
+
+Responsável por manipular o servidor Discord.
+
+Pode ser usado para:
+
+* Criar categorias.
+* Criar canais.
+* Organizar canais por projeto.
+* Criar webhooks nos canais.
+* Enviar mensagens de teste.
+* Ajustar nomes e descrições.
+* Gerenciar permissões básicas.
+* Melhorar a estrutura geral do servidor.
+
+Repositórios recomendados:
+
+```text
+https://github.com/IQAIcom/mcp-discord
+```
+
+ou
+
+```text
+https://github.com/ExilProductions/discord-mcp
+```
+
+### 3.2 MCP GitHub Webhooks
+
+Responsável por criar e gerenciar webhooks nos repositórios do GitHub.
+
+Pode ser usado para:
+
+* Criar webhook em repositório.
+* Criar webhook em organização.
+* Listar webhooks existentes.
+* Atualizar webhooks.
+* Remover webhooks antigos.
+* Configurar eventos como push, pull_request, release e workflow_run.
+
+Repositório recomendado:
+
+```text
+https://github.com/ajaychinthapalli/github-webhooks-mcp-server
+```
+
+---
+
+## 4. Estrutura Recomendada do Discord
+
+Criar ou reorganizar o servidor da Future Station com uma estrutura parecida com esta:
+
+```text
+📌 INFORMAÇÕES
+├── #boas-vindas
+├── #regras
+├── #avisos
+└── #links-importantes
+
+💻 DESENVOLVIMENTO
+├── #dev-geral
+├── #flutter
+├── #backend
+├── #frontend
+└── #bugs-e-ajustes
+
+🔗 GITHUB
+├── #github-commits
+├── #github-pull-requests
+├── #github-releases
+├── #github-actions
+└── #github-alertas
+
+🤖 AUTOMAÇÕES
+├── #n8n-logs
+├── #deploys
+├── #erros-producao
+└── #monitoramento
+
+🧠 IA / MCP
+├── #ideias-ia
+├── #mcp-tools
+└── #auditorias-ai
+```
+
+---
+
+## 5. Canais Prioritários para Automação
+
+### 5.1 #github-commits
+
+Recebe eventos de push/commit.
+
+Exemplo de mensagem:
+
+```text
+🚀 Novo commit na Future Station
+
+Repositório: future-station/app-flutter
+Branch: main
+Autor: Matheus Névoa
+Mensagem: Ajusta validação da tela de login
+
+Arquivos alterados: 4
+Commit: abc1234
+```
+
+### 5.2 #github-pull-requests
+
+Recebe eventos de pull request.
+
+Eventos úteis:
+
+* PR aberto.
+* PR atualizado.
+* PR aprovado.
+* PR mergeado.
+* PR fechado.
+
+Exemplo:
+
+```text
+🔀 Novo Pull Request aberto
+
+Repositório: future-station/app-flutter
+Título: Melhorias na autenticação
+Autor: Matheus Névoa
+Branch: feature/auth-login → main
+Status: Aberto
+```
+
+### 5.3 #github-releases
+
+Recebe publicações de releases.
+
+Exemplo:
+
+```text
+🏷️ Nova release publicada
+
+Repositório: future-station/app-flutter
+Versão: v1.2.0
+Publicado por: Matheus Névoa
+
+Resumo:
+- Ajustes de login
+- Melhorias de performance
+- Correção de bugs no cadastro
+```
+
+### 5.4 #github-actions
+
+Recebe eventos de GitHub Actions.
+
+Eventos úteis:
+
+* Workflow iniciado.
+* Workflow finalizado com sucesso.
+* Workflow falhou.
+* Deploy realizado.
+* Deploy quebrado.
+
+Exemplo:
+
+```text
+⚠️ Falha no GitHub Actions
+
+Repositório: future-station/app-flutter
+Workflow: Deploy Produção
+Branch: main
+Status: Falhou
+Autor: Matheus Névoa
+```
+
+---
+
+## 6. Papel do n8n
+
+O n8n será o intermediário entre GitHub e Discord.
+
+Ele deve receber os eventos do GitHub, identificar o tipo de evento e enviar a mensagem correta para o canal certo.
+
+### Fluxo base no n8n
+
+```text
+Webhook Trigger
+  ↓
+Switch / IF por tipo de evento
+  ↓
+Set / Code para formatar mensagem
+  ↓
+HTTP Request para Discord Webhook
+```
+
+### Eventos recomendados
+
+```text
+push
+pull_request
+release
+workflow_run
+issues
+```
+
+---
+
+## 7. Fluxo de Criação com Pouca Mão Manual
+
+A ideia é pedir para o Claude/CloudCode executar a maior parte da configuração usando os MCPs.
+
+### Etapa 1 — Auditoria do Discord
+
+Usar o MCP Discord para:
+
+```text
+- Listar categorias atuais.
+- Listar canais atuais.
+- Verificar estrutura existente.
+- Sugerir melhorias.
+- Identificar canais duplicados ou mal nomeados.
+- Mapear permissões atuais.
+```
+
+### Etapa 2 — Organização do Servidor
+
+Usar o MCP Discord para:
+
+```text
+- Criar categoria GITHUB.
+- Criar canais de commits, PRs, releases e actions.
+- Criar categoria AUTOMAÇÕES.
+- Criar canais de logs, deploys e erros.
+- Criar categoria IA / MCP.
+- Padronizar nomes dos canais.
+```
+
+### Etapa 3 — Criação dos Webhooks do Discord
+
+Usar o MCP Discord para:
+
+```text
+- Criar webhook no canal #github-commits.
+- Criar webhook no canal #github-pull-requests.
+- Criar webhook no canal #github-releases.
+- Criar webhook no canal #github-actions.
+- Criar webhook no canal #deploys.
+- Criar webhook no canal #erros-producao.
+```
+
+Cada webhook gerado será usado no n8n para envio das mensagens.
+
+### Etapa 4 — Configuração dos Webhooks no GitHub
+
+Usar o MCP GitHub Webhooks para:
+
+```text
+- Listar repositórios da Future Station.
+- Selecionar quais repositórios devem enviar eventos.
+- Criar webhook apontando para a URL do Webhook Trigger do n8n.
+- Configurar eventos: push, pull_request, release e workflow_run.
+- Validar se o webhook foi criado corretamente.
+```
+
+### Etapa 5 — Montagem do Workflow no n8n
+
+Como o MCP do n8n já está instalado, usar ele apenas dentro do ambiente atual para:
+
+```text
+- Criar workflow GitHub → Discord.
+- Criar Webhook Trigger.
+- Criar tratamento por tipo de evento.
+- Criar mensagens formatadas.
+- Criar HTTP Requests para os webhooks do Discord.
+- Validar workflow.
+- Testar com payload fake.
+- Ativar workflow após validação.
+```
+
+---
+
+## 8. Ordem Recomendada de Implementação
+
+### Fase 1 — Ambiente de Teste
+
+```text
+1. Criar canal #github-teste no Discord.
+2. Criar webhook de teste no Discord.
+3. Criar workflow de teste no n8n.
+4. Criar webhook em apenas 1 repositório de teste no GitHub.
+5. Fazer commit de teste.
+6. Validar se a mensagem chegou corretamente.
+```
+
+### Fase 2 — Estrutura Oficial
+
+```text
+1. Criar categoria GITHUB.
+2. Criar canais oficiais.
+3. Criar webhooks oficiais.
+4. Separar eventos por tipo.
+5. Ajustar formatação das mensagens.
+```
+
+### Fase 3 — GitHub Real
+
+```text
+1. Configurar webhooks nos repositórios reais.
+2. Começar pelos repositórios principais.
+3. Validar eventos de push.
+4. Validar eventos de pull request.
+5. Validar eventos de release.
+6. Validar eventos de workflow_run.
+```
+
+### Fase 4 — Evolução
+
+```text
+1. Criar resumo diário de commits.
+2. Criar relatório semanal.
+3. Criar alerta de falha em produção.
+4. Criar alerta de PR parado.
+5. Criar integração com issues.
+6. Criar integração com tarefas internas.
+```
+
+---
+
+## 9. Permissões Necessárias
+
+### Discord
+
+Será necessário:
+
+```text
+- Criar bot no Discord Developer Portal.
+- Adicionar bot ao servidor.
+- Dar permissão para gerenciar canais.
+- Dar permissão para gerenciar webhooks.
+- Dar permissão para enviar mensagens.
+- Evitar permissão de administrador se não for necessário.
+```
+
+Permissões recomendadas:
+
+```text
+Manage Channels
+Manage Webhooks
+Send Messages
+Read Message History
+View Channels
+Manage Roles, se for mexer em permissões
+```
+
+### GitHub
+
+Será necessário gerar token com permissões para:
+
+```text
+- Ler repositórios.
+- Criar webhooks.
+- Listar webhooks.
+- Atualizar webhooks.
+```
+
+Permissões possíveis:
+
+```text
+repo
+admin:repo_hook
+read:org, se for organização
+admin:org_hook, se for webhook em nível de organização
+```
+
+### n8n
+
+Como o MCP do n8n já está instalado, confirmar apenas:
+
+```text
+- URL da instância n8n.
+- API Key configurada.
+- Permissão para criar workflows.
+- Permissão para ativar workflows.
+- Credenciais HTTP configuradas, se necessário.
+```
+
+---
+
+## 10. Segurança Recomendada
+
+```text
+- Não usar token pessoal principal se puder criar token dedicado.
+- Não dar permissão de administrador ao bot do Discord sem necessidade.
+- Criar primeiro em servidor/canal de teste.
+- Testar com um repositório pequeno.
+- Fazer backup/export do workflow n8n antes de alterações.
+- Não expor URLs de webhook publicamente.
+- Salvar tokens em variáveis de ambiente ou credenciais seguras.
+- Usar secret no GitHub webhook se possível.
+```
+
+---
+
+## 11. Prompt Base para o Claude/CloudCode
+
+```text
+Você está atuando como arquiteto de automações para o servidor Discord da Future Station.
+
+Contexto:
+- Já existe um servidor Discord da Future Station.
+- O usuário é administrador do servidor.
+- O objetivo é melhorar a organização do servidor e criar automações de GitHub para Discord.
+- O MCP do n8n já está instalado no ambiente.
+- Devem ser usados MCPs de Discord e GitHub Webhooks quando disponíveis.
+- O n8n será usado como intermediário entre GitHub e Discord.
+
+Objetivo:
+Criar uma automação GitHub → n8n → Discord, com canais organizados para commits, pull requests, releases e GitHub Actions.
+
+Tarefas:
+
+1. Auditar a estrutura atual do servidor Discord:
+   - Listar categorias.
+   - Listar canais.
+   - Identificar canais relacionados a desenvolvimento.
+   - Sugerir estrutura melhorada.
+   - Não alterar nada sem aprovação explícita.
+
+2. Propor nova estrutura:
+   - Categoria GITHUB.
+   - Canal #github-commits.
+   - Canal #github-pull-requests.
+   - Canal #github-releases.
+   - Canal #github-actions.
+   - Categoria AUTOMAÇÕES.
+   - Canal #n8n-logs.
+   - Canal #deploys.
+   - Canal #erros-producao.
+
+3. Após aprovação, criar os canais necessários no Discord.
+
+4. Criar webhooks do Discord para os canais:
+   - #github-commits
+   - #github-pull-requests
+   - #github-releases
+   - #github-actions
+
+5. Preparar a estrutura do workflow no n8n:
+   - Webhook Trigger para receber eventos do GitHub.
+   - Identificação do tipo de evento.
+   - Formatação da mensagem.
+   - Envio para o webhook correto do Discord.
+
+6. Configurar webhooks no GitHub:
+   - Selecionar repositório de teste primeiro.
+   - Criar webhook apontando para a URL do n8n.
+   - Eventos: push, pull_request, release, workflow_run.
+   - Validar entrega do payload.
+
+7. Criar testes:
+   - Commit de teste.
+   - Pull request de teste.
+   - Release fake ou draft.
+   - Simulação de falha no GitHub Actions, se possível.
+
+Regras:
+- Não aplicar mudanças em produção sem aprovação.
+- Primeiro trabalhar em canal/repositório de teste.
+- Não expor tokens no output.
+- Documentar tudo que for criado.
+- Informar quais permissões foram usadas.
+- Separar claramente auditoria, plano e execução.
+```
+
+---
+
+## 12. Resultado Esperado
+
+Ao final, o servidor Discord da Future Station deverá ter:
+
+```text
+- Estrutura organizada para desenvolvimento.
+- Canais separados para GitHub.
+- Webhooks do Discord criados.
+- Workflow n8n recebendo eventos do GitHub.
+- Mensagens automáticas formatadas.
+- Commits registrados automaticamente.
+- Pull requests registrados automaticamente.
+- Releases registradas automaticamente.
+- Falhas de GitHub Actions registradas automaticamente.
+```
+
+---
+
+## 13. Melhor Caminho Prático
+
+O caminho mais seguro é:
+
+```text
+1. Instalar/configurar MCP Discord.
+2. Instalar/configurar MCP GitHub Webhooks.
+3. Auditar servidor Discord atual.
+4. Criar apenas canal #github-teste.
+5. Criar webhook de teste.
+6. Criar workflow teste no n8n.
+7. Criar webhook em 1 repositório de teste.
+8. Validar.
+9. Replicar para os canais oficiais.
+10. Replicar para os repositórios reais.
+```
+
+---
+
+## 14. Conclusão
+
+Para o objetivo da Future Station, o melhor desenho é:
+
+```text
+Discord MCP
+  → organiza servidor
+  → cria canais
+  → cria webhooks
+
+GitHub Webhooks MCP
+  → cria webhooks nos repositórios
+
+n8n já instalado
+  → recebe eventos
+  → trata payloads
+  → formata mensagens
+  → envia para Discord
+```
+
+Essa estrutura permite criar uma automação robusta com baixa intervenção manual, mantendo controle, segurança e possibilidade de evolução futura.
